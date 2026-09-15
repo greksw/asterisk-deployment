@@ -111,7 +111,7 @@ done
 [[ $ASTERISK_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fatal 'Asterisk version must use X.Y.Z format.'
 [[ $ASTERISK_SHA256 =~ ^[0-9a-f]{64}$ ]] || fatal 'SHA-256 must be 64 lowercase hexadecimal characters.'
 
-if ((VERSION_EXPLICIT == 1 && SHA_EXPLICIT == 0)) && [[ $ASTERISK_VERSION != $DEFAULT_ASTERISK_VERSION ]]; then
+if ((VERSION_EXPLICIT == 1 && SHA_EXPLICIT == 0)) && [[ $ASTERISK_VERSION != "$DEFAULT_ASTERISK_VERSION" ]]; then
     fatal 'When overriding --version, provide the matching --sha256 explicitly.'
 fi
 
