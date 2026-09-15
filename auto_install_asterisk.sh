@@ -124,7 +124,7 @@ if [[ -z $BUILD_JOBS ]]; then
 fi
 [[ $BUILD_JOBS =~ ^[1-9][0-9]*$ ]] || fatal '--jobs must be a positive integer.'
 
-SOURCE_URL="https://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-${ASTERISK_VERSION}.tar.gz"
+SOURCE_URL="https://downloads.asterisk.org/pub/telephony/asterisk/asterisk-${ASTERISK_VERSION}.tar.gz"
 TARBALL="${SOURCE_ROOT}/asterisk-${ASTERISK_VERSION}.tar.gz"
 BUILD_DIR="${SOURCE_ROOT}/asterisk-${ASTERISK_VERSION}"
 
