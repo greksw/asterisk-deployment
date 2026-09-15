@@ -1,0 +1,50 @@
+name: Shell CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'portfolio/**'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Bash syntax
+        run: bash -n auto_install_asterisk.sh
+
+      - name: ShellCheck
+        run: shellcheck auto_install_asterisk.sh
+
+      - name: Validate default plan
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          chmod +x auto_install_asterisk.sh
+          output=$(./auto_install_asterisk.sh --jobs 2 --print-plan)
+          grep -q '^  version:            22.11.0$' <<<"$output"
+          grep -q '^  sha256:             3bd5ee040509a3d3cd9b1ba9520c18e6ec0a7e7981ca68c457dcd36ba3c54d94$' <<<"$output"
+          grep -q '^  source URL:         https://downloads.asterisk.org/pub/telephony/asterisk/asterisk-22.11.0.tar.gz$' <<<"$output"
+          grep -q '^  build jobs:         2$' <<<"$output"
+          grep -q '^  start service:      0$' <<<"$output"
+
+      - name: Validate version checksum guard
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if ./auto_install_asterisk.sh --version 22.10.0 --print-plan >/tmp/plan.out 2>/tmp/plan.err; then
+              echo 'Expected version-only override to fail.' >&2
+              exit 1
+          fi
+          grep -q 'provide the matching --sha256 explicitly' /tmp/plan.err
